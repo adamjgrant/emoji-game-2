@@ -89,20 +89,32 @@ h1 {
 #equation-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     font-size: 3rem;
-    margin-bottom: 40px;
-    gap: 20px;
-    min-height: 100px;
+    margin-bottom: 20px;
+    gap: 12px;
+    min-height: 120px;
+    padding-bottom: 30px;
+    flex-wrap: wrap;
+    max-width: 100%;
 }
 
 .equation-item {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 60px;
+    min-width: 50px;
     min-height: 60px;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    position: relative;
+    margin-bottom: 0.6rem;
+    padding: 0 5px;
+}
+
+.missing-item-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0.6rem;
 }
 
 .missing-slot {
@@ -116,6 +128,7 @@ h1 {
     color: #a0aec0;
     animation: pulse 1.5s infinite;
     font-size: 2.5rem;
+    position: relative;
 }
 
 .revealed-answer {
@@ -130,6 +143,23 @@ h1 {
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-bottom: 30px;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e2e8f0;
+    position: relative;
+}
+
+#options-container::before {
+    content: "Choose the missing emoji";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 0 15px;
+    font-size: 0.9rem;
+    color: #718096;
+    font-weight: 600;
 }
 
 .option {
@@ -141,13 +171,17 @@ h1 {
     cursor: pointer;
     transition: all 0.2s ease;
     background-color: white;
-    box-shadow: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    padding-bottom: 30px;
 }
 
 .option:hover {
-    background-color: #f7fafc;
+    background-color: #edf2f7;
     transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    border: 2px solid #4299e1;
+    padding: 18px 18px 28px 18px;
 }
 
 .option:active {
@@ -247,6 +281,8 @@ h1 {
 
 .equation-text {
     font-size: 1.3rem;
+    position: relative;
+    padding-bottom: 1rem;
 }
 
 .result-indicator {
@@ -351,6 +387,26 @@ h1 {
     }
 }
 
+@media (max-width: 600px) {
+    #equation-container {
+        gap: 10px;
+        font-size: 2.5rem;
+    }
+    
+    .equation-item {
+        min-width: 40px;
+    }
+    
+    .missing-slot {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .caption {
+        font-size: 0.6rem;
+    }
+}
+
 .coefficient {
     font-size: 1.5rem;
     font-weight: bold;
@@ -369,20 +425,73 @@ h1 {
     color: #4a5568;
 }
 
-.caption {
-    font-size: 0.7rem;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 0.3rem;
-    color: #718096;
-    letter-spacing: 0.05rem;
-}
-
 .emoji {
     position: relative;
+    display: inline-block;
+    margin-bottom: 0.6rem;
+    text-align: center;
 }
 
 .question-mark {
     font-size: 2.5rem;
     color: #a0aec0;
+    display: inline-block;
+}
+
+/* Style for coefficients outside the missing slot */
+.coefficient.outside-slot {
+    position: absolute;
+    left: -0.5rem;
+    top: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+/* Style for superscripts outside the missing slot */
+.superscript.outside-slot {
+    position: absolute;
+    right: -0.8rem;
+    top: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+/* Make sure text elements in the equation are aligned properly */
+.equation-item span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Add specific styling for equations with captions */
+.equation-item.has-caption {
+    margin: 0 10px 0.6rem 10px;
+}
+
+/* For equations with many items, make the container wider and add more spacing */
+#equation-container.many-items {
+    width: 100%;
+    justify-content: space-evenly;
+    padding: 0 10px;
+}
+
+/* Ensure the caption is properly centered under its parent */
+.caption {
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: center;
+    color: #000000;
+    letter-spacing: 0.05rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -0.6rem;
+    margin: 0;
+    z-index: 2;
+    white-space: nowrap;
+    max-width: none;
+    overflow: visible;
+    width: auto;
+    pointer-events: none;
 } 

@@ -17,8 +17,8 @@ function getFormattedDate() {
     });
 }
 
-// For testing purposes, we'll use our static file
-const gameDate = '2025-03-10';
+// Use the current date for the game
+const gameDate = getTodayDate();
 
 // Game state
 let gameData = null;
@@ -37,24 +37,24 @@ async function loadGameData() {
         // Display the date subtitle
         dateSubtitleElement.textContent = `The ${getFormattedDate()} Edition`;
         
-        const response = await fetch(`data/${gameDate}.json`);
+        let response = await fetch(`data/${gameDate}.json`);
+        
+        // If today's file doesn't exist, show an error
         if (!response.ok) {
-            throw new Error('Failed to load game data');
+            console.log(`No game data found for ${gameDate}`);
+            throw new Error('No game data available for today');
         }
         
         gameData = await response.json();
-        console.log('Game data loaded:', gameData);
         
-        // Hide loading, show game container
         loadingElement.style.display = 'none';
         gameElement.style.display = 'block';
         
-        // Start the game
-        startGame();
-        
+        return true;
     } catch (error) {
         console.error('Error loading game data:', error);
-        loadingElement.textContent = 'Error loading game data. Please try again later.';
+        loadingElement.textContent = 'Failed to load game data. Please try again later.';
+        return false;
     }
 }
 
@@ -122,13 +122,62 @@ function displayEquation(roundData) {
     const equationContainer = document.getElementById('equation-container');
     equationContainer.innerHTML = '';
     
+    // Add 'many-items' class if there are more than 5 items or if multiple items have captions
+    const hasManyItems = roundData.equation.length > 5;
+    const captionCount = roundData.equation.filter(item => item.caption).length;
+    if (hasManyItems || captionCount > 1) {
+        equationContainer.classList.add('many-items');
+    } else {
+        equationContainer.classList.remove('many-items');
+    }
+    
     roundData.equation.forEach((item, index) => {
         const element = document.createElement('div');
         element.classList.add('equation-item');
         
+        // Add has-caption class if the item has a caption
+        if (item.caption) {
+            element.classList.add('has-caption');
+        }
+        
         if (index === roundData.missingIndex) {
-            element.classList.add('missing-slot');
-            element.innerHTML = `<span class="question-mark">?</span>`;
+            // Create a wrapper for the missing slot and its superscripts/coefficients
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('missing-item-wrapper');
+            
+            // Create the missing slot with just the question mark
+            const missingSlot = document.createElement('div');
+            missingSlot.classList.add('missing-slot');
+            missingSlot.innerHTML = `<span class="question-mark">?</span>`;
+            
+            // Add the missing slot to the wrapper
+            wrapper.appendChild(missingSlot);
+            
+            // Add coefficient if present (outside the missing slot)
+            if (item.coefficient) {
+                const coefficient = document.createElement('span');
+                coefficient.classList.add('coefficient', 'outside-slot');
+                coefficient.textContent = item.coefficient;
+                wrapper.appendChild(coefficient);
+            }
+            
+            // Add superscript if present (outside the missing slot)
+            if (item.superscript) {
+                const superscript = document.createElement('span');
+                superscript.classList.add('superscript', 'outside-slot');
+                superscript.textContent = item.superscript;
+                wrapper.appendChild(superscript);
+            }
+            
+            // Add caption if present
+            if (item.caption) {
+                const caption = document.createElement('div');
+                caption.classList.add('caption');
+                caption.textContent = item.caption;
+                wrapper.appendChild(caption);
+            }
+            
+            element.appendChild(wrapper);
         } else if (item.text) {
             // For operators like +, =
             element.textContent = item.text;
@@ -437,4 +486,9 @@ function shareResults() {
 }
 
 // Load game data when the page loads
-document.addEventListener('DOMContentLoaded', loadGameData); 
+document.addEventListener('DOMContentLoaded', async () => {
+    const dataLoaded = await loadGameData();
+    if (dataLoaded) {
+        startGame();
+    }
+}); 
