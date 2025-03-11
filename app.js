@@ -61,7 +61,7 @@ function startGame() {
 function createGameUI() {
     gameElement.innerHTML = `
         <div id="game-header">
-            <div id="round-indicator">Round 1 of 5</div>
+            <div id="round-indicator">Round 1 of ${gameData.length}</div>
             <div id="tries-indicator">
                 <span class="try active"></span>
                 <span class="try active"></span>
@@ -71,6 +71,7 @@ function createGameUI() {
         <div id="equation-container"></div>
         <div id="options-container"></div>
         <div id="feedback-container"></div>
+        <div id="rationale-container"></div>
     `;
 }
 
@@ -96,6 +97,10 @@ function startRound() {
     
     // Display options
     displayOptions(roundData);
+    
+    // Clear feedback and rationale
+    document.getElementById('feedback-container').innerHTML = '';
+    document.getElementById('rationale-container').innerHTML = '';
 }
 
 // Display the equation with missing part
@@ -188,6 +193,9 @@ function handleOptionClick(selectedOption, roundData) {
             // Show correct answer in equation
             updateEquationWithAnswer(roundData, correctOption);
             
+            // Show rationale
+            showRationale(roundData);
+            
             // Disable options
             disableOptions();
             
@@ -195,7 +203,7 @@ function handleOptionClick(selectedOption, roundData) {
             setTimeout(() => {
                 currentRound++;
                 startRound();
-            }, 2000);
+            }, 4000); // Longer delay to allow reading the rationale
         }
     }
 }
@@ -237,6 +245,18 @@ function showFeedback(isCorrect) {
             feedbackContainer.innerHTML = '';
         }, 1000);
     }
+}
+
+// Show rationale
+function showRationale(roundData) {
+    const rationaleContainer = document.getElementById('rationale-container');
+    rationaleContainer.innerHTML = '';
+    
+    const rationaleElement = document.createElement('div');
+    rationaleElement.classList.add('rationale');
+    rationaleElement.textContent = roundData.rationale;
+    
+    rationaleContainer.appendChild(rationaleElement);
 }
 
 // Update tries indicator
