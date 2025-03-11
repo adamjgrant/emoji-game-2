@@ -135,8 +135,8 @@ function displayEquation(roundData) {
         const element = document.createElement('div');
         element.classList.add('equation-item');
         
-        // Add has-caption class if the item has a caption
-        if (item.caption) {
+        // Add has-caption class if the item has a caption (except for missing items)
+        if (item.caption && index !== roundData.missingIndex) {
             element.classList.add('has-caption');
         }
         
@@ -169,13 +169,7 @@ function displayEquation(roundData) {
                 wrapper.appendChild(superscript);
             }
             
-            // Add caption if present
-            if (item.caption) {
-                const caption = document.createElement('div');
-                caption.classList.add('caption');
-                caption.textContent = item.caption;
-                wrapper.appendChild(caption);
-            }
+            // DO NOT add caption for missing items - it will be added when revealed
             
             element.appendChild(wrapper);
         } else if (item.text) {
@@ -257,15 +251,26 @@ function handleOptionClick(selectedOption, roundData) {
     const correctOption = roundData.options[0];
     const isCorrect = selectedOption === correctOption;
     
+    // Get the current try number (1-based)
+    const currentTry = 3 - triesRemaining + 1;
+    
     if (isCorrect) {
         // Show correct feedback
         showFeedback(true);
         
-        // Record result
+        // Record result with tries array
+        // Initialize tries array with all correct (green) tries
+        const tries = Array(3).fill('correct');
+        // Mark previous tries as incorrect if any
+        for (let i = 0; i < currentTry - 1; i++) {
+            tries[i] = 'incorrect';
+        }
+        
         gameResults.push({
             round: currentRound + 1,
-            triesUsed: 3 - triesRemaining + 1,
-            correct: true
+            triesUsed: currentTry,
+            correct: true,
+            tries: tries
         });
         
         // Show correct answer in equation
@@ -289,11 +294,14 @@ function handleOptionClick(selectedOption, roundData) {
         
         // If no tries left
         if (triesRemaining <= 0) {
-            // Record result
+            // Record result with tries array (all incorrect)
+            const tries = Array(3).fill('incorrect');
+            
             gameResults.push({
                 round: currentRound + 1,
                 triesUsed: 3,
-                correct: false
+                correct: false,
+                tries: tries
             });
             
             // Show correct answer in equation
@@ -325,9 +333,15 @@ function updateEquationWithAnswer(roundData, correctOption) {
     // Create a copy of the correct item but with the emoji replaced
     const answerItem = { ...correctItem, emoji: correctOption };
     
+    // Add the revealed answer
     missingItem.innerHTML = createEmojiHTML(answerItem);
     missingItem.classList.remove('missing-slot');
     missingItem.classList.add('revealed-answer');
+    
+    // Add has-caption class if the revealed answer has a caption
+    if (correctItem.caption) {
+        missingItem.classList.add('has-caption');
+    }
 }
 
 // Disable options after answer is revealed
@@ -452,19 +466,40 @@ function shareResults() {
     // Create share text (similar to Wordle)
     let shareText = `Emoji Game ${gameDate}\n`;
     
-    // Add emoji representation of results
+    // Add emoji representation of results in a grid pattern
     gameResults.forEach(result => {
-        if (result.correct) {
-            // Green square for correct, with number of tries
-            shareText += `🟩${result.triesUsed} `;
+        // For each round, create a row of squares based on the tries array
+        if (result.tries) {
+            // Use the tries array to determine colors
+            result.tries.forEach(tryResult => {
+                if (tryResult === 'correct') {
+                    shareText += '🟩'; // Green for correct try
+                } else {
+                    shareText += '🟥'; // Red for incorrect try
+                }
+            });
         } else {
-            // Red square for incorrect
-            shareText += '🟥 ';
+            // Fallback for older results without tries array
+            if (result.correct) {
+                // If correct, show the number of tries used
+                for (let i = 1; i <= 3; i++) {
+                    if (i <= result.triesUsed) {
+                        shareText += '🟩'; // Green for successful try
+                    } else {
+                        shareText += '⬜'; // White for unused tries
+                    }
+                }
+            } else {
+                // If incorrect after 3 tries
+                shareText += '🟥🟥🟥';
+            }
         }
+        // Add a new line after each round
+        shareText += '\n';
     });
     
     // Add URL to the share text
-    shareText += `\n\n${window.location.href}`;
+    shareText += `\n${window.location.href}`;
     
     // Display share text in the UI
     const shareTextElement = document.getElementById('share-text');

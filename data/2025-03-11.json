@@ -2,92 +2,82 @@
   {
     "id": 1,
     "equation": [
-      { "emoji": "🇺🇸" },
+      { "emoji": "👨" },
+      { "text": "-" },
+      { "emoji": "👕" },
       { "text": "+" },
-      { "emoji": "🥩" },
+      { "emoji": "🐴" },
       { "text": "=" },
-      { "emoji": "🍔" }
+      { "emoji": "🇷🇺", "caption": "PUTIN" }
     ],
     "missingIndex": 2,
-    "options": ["🥩", "🍗", "🧀", "🥓", "🥬", "🍅", "🥖", "🍤", "🍳"],
-    "rationale": "The hamburger is an iconic American food. When you combine America (USA) with beef steak, you get a classic American hamburger!"
+    "options": ["👕", "👖", "🧥", "👔", "👗", "🧣", "🧤", "👒", "🥾"],
+    "rationale": "Reference to Putin's famous shirtless horseback riding photos used in Russian propaganda."
   },
   {
     "id": 2,
     "equation": [
-      { "emoji": "🐝" },
+      { "emoji": "💧", "superscript": "3" },
       { "text": "+" },
-      { "emoji": "🏠" },
+      { "emoji": "🥃" },
+      { "text": "+" },
+      { "emoji": "☂️" },
       { "text": "=" },
-      { "emoji": "🍯" }
+      { "emoji": "🍹" }
     ],
-    "missingIndex": 4,
-    "options": ["🍯", "🐝", "🏠", "🌼", "🥜", "🍬", "🧃", "🍦", "🍪"],
-    "rationale": "Bees live in hives (bee houses) where they store the honey they produce. So a bee plus its home equals honey."
+    "missingIndex": 0,
+    "options": ["💧", "🧊", "🍋", "🍍", "🥥", "🧉", "🥛", "🥤", "🧪"],
+    "rationale": "Tropical cocktails contain ice (water³), alcohol, and are often garnished with tiny umbrellas."
   },
   {
     "id": 3,
     "equation": [
-      { "emoji": "☁️" },
+      { "emoji": "🎬", "caption": "MOVIE" },
+      { "text": "÷" },
+      { "emoji": "👥", "caption": "PEOPLE" },
+      { "text": "×" },
+      { "emoji": "💰" },
       { "text": "+" },
-      { "emoji": "💧" },
+      { "emoji": "🍅" },
       { "text": "=" },
-      { "emoji": "🌧️" }
+      { "emoji": "🍓", "caption": "RASPBERRY" }
     ],
-    "missingIndex": 0,
-    "options": ["☁️", "🌤️", "🌈", "❄️", "⚡", "🔥", "💨", "🌋", "🌊"],
-    "rationale": "Rain forms when water droplets gather in clouds and become heavy enough to fall. So clouds plus water drops equal rain."
+    "missingIndex": 6,
+    "options": ["🍅", "🍎", "🍊", "🍋", "🍇", "🍉", "🍑", "🍒", "🥝"],
+    "rationale": "The Raspberry Awards ('Razzies') honor the worst films - unpopular movies with big budgets and bad reviews (rotten tomatoes)."
   },
   {
     "id": 4,
     "equation": [
-      { "emoji": "🌲" },
+      { "emoji": "🤖", "caption": "ROBOT" },
       { "text": "+" },
-      { "emoji": "🪓" },
+      { "emoji": "🐞", "caption": "BUG" },
+      { "text": "+" },
+      { "emoji": "🔪" },
       { "text": "=" },
-      { "emoji": "🪵" }
+      { "emoji": "☠️", "caption": "EXTINCTION" }
     ],
     "missingIndex": 2,
-    "options": ["🪓", "🔨", "🪚", "✂️", "🔪", "🧹", "🧰", "🔧", "🔥"],
-    "rationale": "An axe is the traditional tool used to chop down trees to get wood. When you use an axe on a tree, you get logs of wood."
+    "options": ["🐞", "🦠", "💻", "🧸", "🧩", "🎮", "📱", "🔍", "🧲"],
+    "rationale": "This represents how robots with weapons could eliminate bugs/insects, leading to species extinction."
   },
   {
     "id": 5,
     "equation": [
-      { "emoji": "🧵" },
+      { "emoji": "🥃", "caption": "ALCOHOL" },
       { "text": "+" },
-      { "emoji": "🪡" },
-      { "text": "=" },
-      { "emoji": "👕" }
-    ],
-    "missingIndex": 4,
-    "options": ["👕", "🧸", "🎒", "🧦", "🧣", "🪆", "🧩", "🧶", "🎪"],
-    "rationale": "Thread and needle are the basic tools used in sewing to create clothing. When you sew with thread and a needle, you can make a shirt."
-  },
-  {
-    "id": 6,
-    "equation": [
-      { "emoji": "🍇", "coefficient": 2, "caption": "GRAPES" },
+      { "emoji": "🎉", "caption": "PARTY" },
       { "text": "+" },
-      { "emoji": "🥃", "caption": "BRANDY" },
+      { "emoji": "😴", "caption": "SLEEP" },
+      { "text": "-" },
+      { "emoji": "⏰", "caption": "ALARM" },
       { "text": "=" },
-      { "emoji": "🍷", "caption": "PORT" }
-    ],
-    "missingIndex": 1,
-    "options": ["🥃", "🍺", "🧊", "🍋", "🍯", "🥛", "🧂", "🌶️", "🍬"],
-    "rationale": "Port wine is made by adding brandy to grape juice during fermentation. The '2' coefficient for grapes indicates the concentrated nature of port wine, which uses more grapes than regular wine."
-  },
-  {
-    "id": 7,
-    "equation": [
-      { "emoji": "🔥" },
+      { "emoji": "💼", "caption": "JOB" },
       { "text": "+" },
-      { "emoji": "💧", "superscript": "2" },
-      { "text": "=" },
-      { "emoji": "☕", "caption": "COFFEE" }
+      { "emoji": "🔥", "caption": "FIRED" }
     ],
-    "missingIndex": 2,
-    "options": ["💧", "🧊", "🥛", "🍯", "🧂", "🍋", "🍬", "🌿", "🍓"],
-    "rationale": "To make coffee, you need heat (fire) and water. The superscript '2' on water indicates that you need a significant amount of water compared to the coffee grounds (which aren't shown in this simplified equation)."
+    "missingIndex": 10,
+    "options": ["🔥", "💸", "📉", "🚪", "📝", "😡", "🤬", "👋", "💼"],
+    "rationale": "This equation represents how drinking at a party, oversleeping, and missing your alarm can lead to getting fired from your job."
   }
 ] 
