@@ -23,7 +23,7 @@ const gameDate = getTodayDate();
 // Game state
 let gameData = null;
 let currentRound = 0;
-let triesRemaining = 3;
+let triesRemaining = 2;
 let gameResults = [];
 
 // DOM elements
@@ -79,7 +79,6 @@ function createGameUI() {
             <div id="tries-indicator">
                 <span class="try active"></span>
                 <span class="try active"></span>
-                <span class="try active"></span>
             </div>
         </div>
         <div id="equation-container"></div>
@@ -97,7 +96,7 @@ function startRound() {
     }
     
     // Reset tries for new round
-    triesRemaining = 3;
+    triesRemaining = 2;
     updateTriesIndicator();
     
     // Update round indicator
@@ -240,19 +239,21 @@ function handleOptionClick(selectedOption, roundData) {
     const isCorrect = selectedOption === correctOption;
     
     // Get the current try number (1-based)
-    const currentTry = 3 - triesRemaining + 1;
+    const currentTry = 2 - triesRemaining + 1;
     
     if (isCorrect) {
         // Show correct feedback
         showFeedback(true);
         
         // Record result with tries array
-        // Initialize tries array with all correct (green) tries
-        const tries = Array(3).fill('correct');
-        // Mark previous tries as incorrect if any
-        for (let i = 0; i < currentTry - 1; i++) {
-            tries[i] = 'incorrect';
+        // Create an array representing each try (first to last)
+        const tries = [];
+        // Add previous incorrect tries
+        for (let i = 1; i < currentTry; i++) {
+            tries.push('incorrect');
         }
+        // Add the current correct try
+        tries.push('correct');
         
         gameResults.push({
             round: currentRound + 1,
@@ -264,14 +265,21 @@ function handleOptionClick(selectedOption, roundData) {
         // Show correct answer in equation
         updateEquationWithAnswer(roundData, selectedOption);
         
+        // Show rationale
+        showRationale(roundData);
+        
         // Disable options
         disableOptions();
         
         // Move to next round after delay
         setTimeout(() => {
             currentRound++;
-            startRound();
-        }, 2000);
+            if (currentRound < gameData.length) {
+                startRound();
+            } else {
+                endGame();
+            }
+        }, 3000);
     } else {
         // Show incorrect feedback
         showFeedback(false);
@@ -282,17 +290,17 @@ function handleOptionClick(selectedOption, roundData) {
         
         // If no tries left
         if (triesRemaining <= 0) {
-            // Record result with tries array (all incorrect)
-            const tries = Array(3).fill('incorrect');
+            // Record result with tries array - all tries were incorrect
+            const tries = Array(2).fill('incorrect');
             
             gameResults.push({
                 round: currentRound + 1,
-                triesUsed: 3,
+                triesUsed: 2,
                 correct: false,
                 tries: tries
             });
             
-            // Show correct answer in equation
+            // Show correct answer
             updateEquationWithAnswer(roundData, correctOption);
             
             // Show rationale
@@ -304,8 +312,12 @@ function handleOptionClick(selectedOption, roundData) {
             // Move to next round after delay
             setTimeout(() => {
                 currentRound++;
-                startRound();
-            }, 4000); // Longer delay to allow reading the rationale
+                if (currentRound < gameData.length) {
+                    startRound();
+                } else {
+                    endGame();
+                }
+            }, 3000);
         }
     }
 }
@@ -413,6 +425,13 @@ function updateTriesIndicator() {
 function endGame() {
     const gameElement = document.getElementById('game');
     
+    // Ensure gameData has isCorrect properties based on gameResults
+    gameData.forEach((round, index) => {
+        if (gameResults[index]) {
+            round.isCorrect = gameResults[index].correct;
+        }
+    });
+    
     // Create results HTML
     let resultsHTML = `
         <div class="results-container">
@@ -477,16 +496,60 @@ function shareResults() {
     let shareText = `Everything.io ${gameDate}\n`;
     
     // Add score
-    const correctCount = gameData.filter(round => round.isCorrect).length;
+    const correctCount = gameResults.filter(result => result.correct).length;
     shareText += `${correctCount}/${gameData.length}\n\n`;
     
-    // Add emoji representation of results
-    gameData.forEach(round => {
-        shareText += round.isCorrect ? '✅' : '❌';
+    // Add emoji representation of results using colored squares
+    gameResults.forEach(result => {
+        // For each round, create a row of squares based on the tries array
+        if (result.tries) {
+            // Use the tries array to determine colors
+            result.tries.forEach(tryResult => {
+                if (tryResult === 'correct') {
+                    shareText += '🟩'; // Green for correct try
+                } else {
+                    shareText += '🟥'; // Red for incorrect try
+                }
+            });
+            
+            // If they got it right on the first try, we need to add a white square
+            // for the unused try (since we only have 2 tries total)
+            if (result.correct && result.tries.length === 1) {
+                shareText += '⬜'; // White for unused try
+            }
+            
+            // If they didn't use all tries and didn't get it right, fill with white squares
+            if (!result.correct && result.tries.length < 2) {
+                for (let i = result.tries.length; i < 2; i++) {
+                    shareText += '⬜'; // White for unused tries
+                }
+            }
+        } else {
+            // Fallback for older results without tries array
+            if (result.correct) {
+                // If correct, show the number of tries used
+                for (let i = 1; i <= 2; i++) {
+                    if (i <= result.triesUsed) {
+                        if (i === result.triesUsed) {
+                            shareText += '🟩'; // Green for successful try
+                        } else {
+                            shareText += '🟥'; // Red for unsuccessful tries
+                        }
+                    } else {
+                        shareText += '⬜'; // White for unused tries
+                    }
+                }
+            } else {
+                // If incorrect after 2 tries
+                shareText += '🟥🟥';
+            }
+        }
+        // Add a new line after each round
+        shareText += '\n';
     });
     
     // Add URL
-    shareText += '\n\nPlay at: everything.io';
+    shareText += `\nPlay at: everything.io`;
     
     // Try to use the Web Share API if available
     if (navigator.share) {

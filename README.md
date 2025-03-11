@@ -6,7 +6,7 @@ A web-based game where math equations are made of emojis. Each round presents an
 
 1. Each round shows an emoji equation with one part missing (shown as a question mark)
 2. Choose the correct emoji from the 9 options provided
-3. You have 3 tries per round
+3. You have 2 tries per round
 4. After completing all rounds, you'll see your results and can share them
 
 ## Features
