@@ -176,8 +176,8 @@ function displayEquation(roundData) {
             // For operators like +, =
             element.textContent = item.text;
         } else {
-            // For emoji items
-            element.innerHTML = createEmojiHTML(item);
+            // For emoji items - show captions in the equation
+            element.innerHTML = createEmojiHTML(item, true);
         }
         
         equationContainer.appendChild(element);
@@ -185,7 +185,7 @@ function displayEquation(roundData) {
 }
 
 // Create HTML for an emoji with coefficient, superscript, and caption
-function createEmojiHTML(item) {
+function createEmojiHTML(item, showCaption = true) {
     let html = '';
     
     // Add coefficient if present
@@ -201,8 +201,8 @@ function createEmojiHTML(item) {
         html += `<span class="superscript">${item.superscript}</span>`;
     }
     
-    // Add caption if present
-    if (item.caption) {
+    // Add caption if present and showCaption is true
+    if (showCaption && item.caption) {
         html += `<div class="caption">${item.caption}</div>`;
     }
     
@@ -221,20 +221,8 @@ function displayOptions(roundData) {
         const optionElement = document.createElement('div');
         optionElement.classList.add('option');
         
-        // Create a simple object for the emoji
-        const emojiObj = { emoji: option };
-        
-        // For the missing water with superscript in round 7
-        if (option === "💧" && roundData.id === 7) {
-            emojiObj.superscript = "2";
-        }
-        
-        // For the brandy with caption in round 6
-        if (option === "🥃" && roundData.id === 6) {
-            emojiObj.caption = "BRANDY";
-        }
-        
-        optionElement.innerHTML = createEmojiHTML(emojiObj);
+        // Options should always be just the emoji without any additional elements
+        optionElement.innerHTML = `<span class="emoji">${option}</span>`;
         
         // Add click event
         optionElement.addEventListener('click', () => handleOptionClick(option, roundData));
@@ -333,8 +321,8 @@ function updateEquationWithAnswer(roundData, correctOption) {
     // Create a copy of the correct item but with the emoji replaced
     const answerItem = { ...correctItem, emoji: correctOption };
     
-    // Add the revealed answer
-    missingItem.innerHTML = createEmojiHTML(answerItem);
+    // Add the revealed answer - show captions in the revealed answer
+    missingItem.innerHTML = createEmojiHTML(answerItem, true);
     missingItem.classList.remove('missing-slot');
     missingItem.classList.add('revealed-answer');
     
