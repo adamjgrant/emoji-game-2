@@ -128,13 +128,42 @@ function displayEquation(roundData) {
         
         if (index === roundData.missingIndex) {
             element.classList.add('missing-slot');
-            element.textContent = '?';
+            element.innerHTML = `<span class="question-mark">?</span>`;
+        } else if (item.text) {
+            // For operators like +, =
+            element.textContent = item.text;
         } else {
-            element.textContent = item;
+            // For emoji items
+            element.innerHTML = createEmojiHTML(item);
         }
         
         equationContainer.appendChild(element);
     });
+}
+
+// Create HTML for an emoji with coefficient, superscript, and caption
+function createEmojiHTML(item) {
+    let html = '';
+    
+    // Add coefficient if present
+    if (item.coefficient) {
+        html += `<span class="coefficient">${item.coefficient}</span>`;
+    }
+    
+    // Add emoji
+    html += `<span class="emoji">${item.emoji}</span>`;
+    
+    // Add superscript if present
+    if (item.superscript) {
+        html += `<span class="superscript">${item.superscript}</span>`;
+    }
+    
+    // Add caption if present
+    if (item.caption) {
+        html += `<div class="caption">${item.caption}</div>`;
+    }
+    
+    return html;
 }
 
 // Display the options
@@ -148,7 +177,21 @@ function displayOptions(roundData) {
     shuffledOptions.forEach(option => {
         const optionElement = document.createElement('div');
         optionElement.classList.add('option');
-        optionElement.textContent = option;
+        
+        // Create a simple object for the emoji
+        const emojiObj = { emoji: option };
+        
+        // For the missing water with superscript in round 7
+        if (option === "💧" && roundData.id === 7) {
+            emojiObj.superscript = "2";
+        }
+        
+        // For the brandy with caption in round 6
+        if (option === "🥃" && roundData.id === 6) {
+            emojiObj.caption = "BRANDY";
+        }
+        
+        optionElement.innerHTML = createEmojiHTML(emojiObj);
         
         // Add click event
         optionElement.addEventListener('click', () => handleOptionClick(option, roundData));
@@ -177,7 +220,7 @@ function handleOptionClick(selectedOption, roundData) {
         });
         
         // Show correct answer in equation
-        updateEquationWithAnswer(roundData, correctOption);
+        updateEquationWithAnswer(roundData, selectedOption);
         
         // Disable options
         disableOptions();
@@ -227,7 +270,13 @@ function updateEquationWithAnswer(roundData, correctOption) {
     const equationItems = document.querySelectorAll('.equation-item');
     const missingItem = equationItems[roundData.missingIndex];
     
-    missingItem.textContent = correctOption;
+    // Find the correct equation item from the data
+    const correctItem = roundData.equation[roundData.missingIndex];
+    
+    // Create a copy of the correct item but with the emoji replaced
+    const answerItem = { ...correctItem, emoji: correctOption };
+    
+    missingItem.innerHTML = createEmojiHTML(answerItem);
     missingItem.classList.remove('missing-slot');
     missingItem.classList.add('revealed-answer');
 }
@@ -305,9 +354,21 @@ function endGame() {
     
     // Add each equation
     gameData.forEach((round, index) => {
+        let equationText = round.equation.map(item => {
+            if (item.text) return item.text;
+            
+            let text = '';
+            if (item.coefficient) text += item.coefficient;
+            text += item.emoji;
+            if (item.superscript) text += `<sup>${item.superscript}</sup>`;
+            if (item.caption) text += `<small>(${item.caption})</small>`;
+            
+            return text;
+        }).join(' ');
+        
         resultsHTML += `
             <div class="equation-review ${gameResults[index].correct ? 'correct' : 'incorrect'}">
-                <div class="equation-text">${round.equation.join(' ')}</div>
+                <div class="equation-text">${equationText}</div>
                 <div class="result-indicator">${gameResults[index].correct ? '✓' : '✗'}</div>
             </div>
         `;
@@ -340,7 +401,7 @@ function endGame() {
 // Share results
 function shareResults() {
     // Create share text (similar to Wordle)
-    let shareText = `Emoji Math Game ${gameDate}\n`;
+    let shareText = `Emoji Game ${gameDate}\n`;
     
     // Add emoji representation of results
     gameResults.forEach(result => {
@@ -364,7 +425,7 @@ function shareResults() {
     // Use Web Share API
     if (navigator.share) {
         navigator.share({
-            title: 'Emoji Math Game Results',
+            title: 'Emoji Game Results',
             text: shareText,
         })
         .then(() => console.log('Successful share'))
