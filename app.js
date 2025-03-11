@@ -339,18 +339,41 @@ function shareResults() {
         }
     });
     
-    // Display share text
+    // Add URL to the share text
+    shareText += `\n\n${window.location.href}`;
+    
+    // Display share text in the UI
     const shareTextElement = document.getElementById('share-text');
     shareTextElement.textContent = shareText;
     shareTextElement.style.display = 'block';
     
-    // Copy to clipboard
+    // Check if Web Share API is supported
+    if (navigator.share) {
+        navigator.share({
+            title: 'Emoji Math Game Results',
+            text: shareText,
+            // Don't include URL as a separate parameter since it's already in the text
+        })
+        .then(() => console.log('Successful share'))
+        .catch((error) => {
+            console.log('Error sharing:', error);
+            fallbackShare(shareText);
+        });
+    } else {
+        // Fallback for browsers that don't support the Web Share API
+        fallbackShare(shareText);
+    }
+}
+
+// Fallback share method using clipboard
+function fallbackShare(shareText) {
     navigator.clipboard.writeText(shareText)
         .then(() => {
-            alert('Results copied to clipboard!');
+            alert('Results copied to clipboard! You can now paste and share them.');
         })
         .catch(err => {
             console.error('Failed to copy results: ', err);
+            alert('Could not copy results to clipboard. Please copy the text manually.');
         });
 }
 
