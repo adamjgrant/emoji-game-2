@@ -355,6 +355,7 @@ function disableOptions() {
 
 // Show feedback
 function showFeedback(isCorrect) {
+    // Keep the original feedback container for compatibility
     const feedbackContainer = document.getElementById('feedback-container');
     feedbackContainer.innerHTML = '';
     
@@ -365,12 +366,33 @@ function showFeedback(isCorrect) {
     
     feedbackContainer.appendChild(feedbackElement);
     
+    // Show notification at the top
+    showNotification(isCorrect ? 'Correct! 🎉' : 'Try again!', isCorrect);
+    
     // Clear feedback after delay if incorrect and tries remaining
     if (!isCorrect && triesRemaining > 0) {
         setTimeout(() => {
             feedbackContainer.innerHTML = '';
         }, 1000);
     }
+}
+
+// Show notification at the top of the screen
+function showNotification(message, isCorrect) {
+    const notificationContainer = document.getElementById('notification');
+    notificationContainer.innerHTML = '';
+    
+    const notificationElement = document.createElement('div');
+    notificationElement.classList.add('notification-message');
+    notificationElement.classList.add(isCorrect ? 'correct' : 'incorrect');
+    notificationElement.textContent = message;
+    
+    notificationContainer.appendChild(notificationElement);
+    
+    // Auto-remove notification after animation completes
+    setTimeout(() => {
+        notificationContainer.innerHTML = '';
+    }, 2000);
 }
 
 // Show rationale
@@ -463,60 +485,32 @@ function endGame() {
 
 // Share results
 function shareResults() {
-    // Create share text (similar to Wordle)
-    let shareText = `Emoji Game ${gameDate}\n`;
+    // Create share text
+    let shareText = `Everything.io ${gameDate}\n`;
     
-    // Add emoji representation of results in a grid pattern
-    gameResults.forEach(result => {
-        // For each round, create a row of squares based on the tries array
-        if (result.tries) {
-            // Use the tries array to determine colors
-            result.tries.forEach(tryResult => {
-                if (tryResult === 'correct') {
-                    shareText += '🟩'; // Green for correct try
-                } else {
-                    shareText += '🟥'; // Red for incorrect try
-                }
-            });
-        } else {
-            // Fallback for older results without tries array
-            if (result.correct) {
-                // If correct, show the number of tries used
-                for (let i = 1; i <= 3; i++) {
-                    if (i <= result.triesUsed) {
-                        shareText += '🟩'; // Green for successful try
-                    } else {
-                        shareText += '⬜'; // White for unused tries
-                    }
-                }
-            } else {
-                // If incorrect after 3 tries
-                shareText += '🟥🟥🟥';
-            }
-        }
-        // Add a new line after each round
-        shareText += '\n';
+    // Add score
+    const correctCount = gameData.filter(round => round.isCorrect).length;
+    shareText += `${correctCount}/${gameData.length}\n\n`;
+    
+    // Add emoji representation of results
+    gameData.forEach(round => {
+        shareText += round.isCorrect ? '✅' : '❌';
     });
     
-    // Add URL to the share text
-    shareText += `\n${window.location.href}`;
+    // Add URL
+    shareText += '\n\nPlay at: everything.io';
     
-    // Display share text in the UI
-    const shareTextElement = document.getElementById('share-text');
-    shareTextElement.textContent = shareText;
-    shareTextElement.style.display = 'block';
-    
-    // Use Web Share API
+    // Try to use the Web Share API if available
     if (navigator.share) {
         navigator.share({
-            title: 'Emoji Game Results',
-            text: shareText,
-        })
-        .then(() => console.log('Successful share'))
-        .catch((error) => console.log('Error sharing:', error));
+            title: 'Everything.io Results',
+            text: shareText
+        }).catch(error => {
+            console.error('Error sharing:', error);
+            fallbackShare(shareText);
+        });
     } else {
-        // If Web Share API is not available, just show the share text
-        console.log('Web Share API not supported');
+        fallbackShare(shareText);
     }
 }
 

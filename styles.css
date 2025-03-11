@@ -201,6 +201,47 @@ h1 {
     text-align: center;
     min-height: 50px;
     margin-top: 25px;
+    display: none;
+}
+
+/* Fixed Notification */
+#notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    text-align: center;
+    pointer-events: none;
+    width: auto;
+    max-width: 90%;
+}
+
+.notification-message {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    animation: fadeInOut 2s ease;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-message.correct {
+    background-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.notification-message.incorrect {
+    background-color: #fed7d7;
+    color: #c53030;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
 }
 
 .feedback {

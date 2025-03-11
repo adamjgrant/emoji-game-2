@@ -64,11 +64,11 @@
   {
     "id": 5,
     "equation": [
-      { "emoji": "🥃", "caption": "ALCOHOL" },
+      { "emoji": "🥃" },
       { "text": "+" },
       { "emoji": "🎉", "caption": "PARTY" },
       { "text": "+" },
-      { "emoji": "😴", "caption": "SLEEP" },
+      { "emoji": "😴" },
       { "text": "-" },
       { "emoji": "⏰", "caption": "ALARM" },
       { "text": "=" },
