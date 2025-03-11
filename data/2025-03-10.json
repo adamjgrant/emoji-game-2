@@ -63,31 +63,5 @@
     "missingIndex": 4,
     "options": ["👕", "🧸", "🎒", "🧦", "🧣", "🪆", "🧩", "🧶", "🎪"],
     "rationale": "Thread and needle are the basic tools used in sewing to create clothing. When you sew with thread and a needle, you can make a shirt."
-  },
-  {
-    "id": 6,
-    "equation": [
-      { "emoji": "🍇", "coefficient": 2, "caption": "GRAPES" },
-      { "text": "+" },
-      { "emoji": "🥃", "caption": "BRANDY" },
-      { "text": "=" },
-      { "emoji": "🍷", "caption": "PORT" }
-    ],
-    "missingIndex": 1,
-    "options": ["🥃", "🍺", "🧊", "🍋", "🍯", "🥛", "🧂", "🌶️", "🍬"],
-    "rationale": "Port wine is made by adding brandy to grape juice during fermentation. The '2' coefficient for grapes indicates the concentrated nature of port wine, which uses more grapes than regular wine."
-  },
-  {
-    "id": 7,
-    "equation": [
-      { "emoji": "🔥" },
-      { "text": "+" },
-      { "emoji": "💧", "superscript": "2" },
-      { "text": "=" },
-      { "emoji": "☕", "caption": "COFFEE" }
-    ],
-    "missingIndex": 2,
-    "options": ["💧", "🧊", "🥛", "🍯", "🧂", "🍋", "🍬", "🌿", "🍓"],
-    "rationale": "To make coffee, you need heat (fire) and water. The superscript '2' on water indicates that you need a significant amount of water compared to the coffee grounds (which aren't shown in this simplified equation)."
   }
 ] 

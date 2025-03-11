@@ -514,6 +514,32 @@ function shareResults() {
     }
 }
 
+// Fallback sharing method when Web Share API is not available
+function fallbackShare(text) {
+    // Create a temporary textarea element
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';  // Prevent scrolling to bottom
+    document.body.appendChild(textarea);
+    
+    // Select and copy the text
+    textarea.select();
+    document.execCommand('copy');
+    
+    // Remove the textarea
+    document.body.removeChild(textarea);
+    
+    // Show notification that text was copied
+    showNotification('Results copied to clipboard! 📋', true);
+    
+    // Also display in the share text area if it exists
+    const shareTextElement = document.getElementById('share-text');
+    if (shareTextElement) {
+        shareTextElement.textContent = text;
+        shareTextElement.style.display = 'block';
+    }
+}
+
 // Load game data when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     const dataLoaded = await loadGameData();

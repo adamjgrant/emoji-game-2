@@ -1,4 +1,4 @@
-# Emoji Math Game
+# Everything.io
 
 A web-based game where math equations are made of emojis. Each round presents an equation with a missing part, and the player must choose the correct emoji from multiple options.
 
@@ -6,26 +6,25 @@ A web-based game where math equations are made of emojis. Each round presents an
 
 1. Each round shows an emoji equation with one part missing (shown as a question mark)
 2. Choose the correct emoji from the 9 options provided
-3. Get feedback on your answer and see your score at the end
-4. Try to get all 5 rounds correct!
+3. You have 3 tries per round
+4. After completing all rounds, you'll see your results and can share them
 
-## Setup
+## Features
 
-### Local Development
+- Daily puzzles
+- Share results with friends
+- Responsive design for mobile and desktop
+- Educational rationales explaining each equation
 
-Simply open the `index.html` file in your browser to play the game locally.
+## Deployment
 
-### Hosting on GitHub Pages
+1. Fork this repository
+2. Enable GitHub Pages in your repository settings
+3. Set the source to the main branch
+4. Wait a few minutes for the site to deploy
+5. Your game will be available at `https://[your-username].github.io/everything-io/`
 
-This project is designed to work as a static site and can be easily hosted on GitHub Pages:
-
-1. Push this repository to GitHub
-2. Go to repository settings
-3. Navigate to "Pages" section
-4. Select the main branch as the source
-5. Your game will be available at `https://[your-username].github.io/emoji-game/`
-
-## Game Data
+## Data Structure
 
 The game data is stored in JSON files in the `data/` directory. Each file is named by date (YYYY-MM-DD.json) and contains 5 rounds of emoji equations.
 
