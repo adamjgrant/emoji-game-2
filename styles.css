@@ -111,13 +111,13 @@ h1 {
 .option {
     font-size: 2.5rem;
     padding: 15px;
-    border: 1px solid #ddd;
+    border: none;
     border-radius: 10px;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
     background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
 }
 
 .option:hover {
