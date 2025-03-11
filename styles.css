@@ -308,4 +308,12 @@ h1 {
         width: 40px;
         height: 40px;
     }
+}
+
+#date-subtitle {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin-top: -10px;
+    margin-bottom: 15px;
 } 

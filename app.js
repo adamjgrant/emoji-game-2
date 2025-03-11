@@ -7,6 +7,16 @@ function getTodayDate() {
     return `${year}-${month}-${day}`;
 }
 
+// Format date for display (e.g., "March 10, 2025")
+function getFormattedDate() {
+    const date = new Date(gameDate.replace(/-/g, '/'));
+    return date.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+    });
+}
+
 // For testing purposes, we'll use our static file
 const gameDate = '2025-03-10';
 
@@ -19,10 +29,14 @@ let gameResults = [];
 // DOM elements
 const loadingElement = document.getElementById('loading');
 const gameElement = document.getElementById('game');
+const dateSubtitleElement = document.getElementById('date-subtitle');
 
 // Load game data
 async function loadGameData() {
     try {
+        // Display the date subtitle
+        dateSubtitleElement.textContent = `The ${getFormattedDate()} Edition`;
+        
         const response = await fetch(`data/${gameDate}.json`);
         if (!response.ok) {
             throw new Error('Failed to load game data');
